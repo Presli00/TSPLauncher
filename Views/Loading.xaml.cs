@@ -23,7 +23,7 @@ namespace GameLauncher.Views
             {
                 ThemeAssist.SetTheme(this, BaseTheme.Light);
             }
-            try
+           try
             {
                 ld.ProgressGrid.Height = (Application.Current.MainWindow).ActualHeight * 0.9;
                 ld.ProgressGrid.Width = (Application.Current.MainWindow).ActualWidth * 0.9;

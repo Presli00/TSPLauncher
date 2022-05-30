@@ -957,10 +957,6 @@ namespace GameLauncher
                 }
             }
             catch (Exception e) { Trace.WriteLine("Error: " + e); }
-            Top = Settings.Default.Top;
-            Left = Settings.Default.Left;
-            Height = Settings.Default.Height;
-            Width = Settings.Default.Width;
             if (Settings.Default.Maximized)
             {
                 WindowState = WindowState.Maximized;
