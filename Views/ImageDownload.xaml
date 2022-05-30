@@ -78,7 +78,7 @@
                                                         <StackPanel>
                                                             <Image Width="70"
                                                                    Height="70"
-                                                                   Source="/Breeze;component/err.png"
+                                                                   Source="/Prism;component/err.png"
                                                                    Stretch="Fill" />
                                                             <TextBlock FontSize="20">Whoops! Nothing here</TextBlock>
                                                             <TextBlock>Try these things first:</TextBlock>
@@ -118,7 +118,7 @@
                                    VerticalAlignment="Center"
                                    FontSize="24"
                                    RenderOptions.EdgeMode="Aliased"
-                                   Text="Breeze Image Search"
+                                   Text="Prism Image Search"
                                    TextWrapping="Wrap" />
                         <Button Grid.Column="3"
                                 Width="45"

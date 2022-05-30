@@ -28,9 +28,13 @@
                              Height="Auto"
                              IsIndeterminate="True"
                              Style="{StaticResource MaterialDesignCircularProgressBar}" />
-                <Image Width="130"
-                       Height="130"
-                       Source="/Breeze;component/breezelogo.png" />
+                <Path
+                    Fill="{StaticResource SecondaryBrush}"
+                Stroke="{StaticResource PrimaryBrush}"
+                Height="100"
+                Width="100"
+                Stretch="Uniform"
+                Data="{StaticResource test}"/>
             </Grid>
         </materialDesign:Card>
     </Grid>

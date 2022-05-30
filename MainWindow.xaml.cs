@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.IO;
 using System.Net;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Text.RegularExpressions;
@@ -95,6 +96,39 @@ namespace GameLauncher
             isDownloadOpen = false;
             LoadSettings();
             Trace.WriteLine(DateTime.Now + ": New Session started");
+        }
+
+        private void Polygon_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //to drag the window when mouse button is down over the header
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                DragMove();
+            }
+        }
+
+        private void minimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void maximizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            //first we check if the window is already maximized
+            if (WindowState == WindowState.Normal)
+            {
+                WindowState = WindowState.Maximized;
+            }
+            else
+            {
+                WindowState = WindowState.Normal;
+            }
+        }
+
+        private void closeButton_Click(object sender, RoutedEventArgs e)
+        {
+            //closes the app
+            Close();
         }
 
         public void CheckLaunchersExist()

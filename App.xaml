@@ -6,12 +6,42 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/icons.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Cyan.xaml" />
                 <ResourceDictionary Source="Resources/CustomScrollbar.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <!--#region Brushes-->
+            <SolidColorBrush 
+            x:Key="DefaultBackgroundBrush" 
+            Color="#16181E"/>
+
+            <SolidColorBrush
+            x:Key="CanvasBrush"
+            Color="#20202C"/>
+
+            <SolidColorBrush
+            x:Key="PrimaryBrush"
+            Color="#00AAEB"/>
+
+            <SolidColorBrush
+            x:Key="SecondaryBrush"
+            Color="White"/>
+
+            <SolidColorBrush
+            x:Key="TertiaryBrush"
+            Color="#E53E46"/>
+
+            <SolidColorBrush
+            x:Key="DimBrush"
+            Color="#3E3E46"/>
+
+            <SolidColorBrush
+            x:Key="Grey"
+            Color="#C1C1C3"/>
+            <!--#endregion-->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

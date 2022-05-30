@@ -6,20 +6,21 @@
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:viewmodels="clr-namespace:GameLauncher.ViewModels"
         xmlns:views="clr-namespace:GameLauncher.Views"
-        Title="Breeze"
-        MinWidth="400"
-        MinHeight="600"
+        Title="Prism"
+        Width="1400"
+        Height="768"
         Background="{DynamicResource MaterialDesignPaper}"
-        Closing="Window_Closed"
         FontFamily="{StaticResource MaterialDesignFont}"
         Icon="breeze.ico"
-        SizeChanged="MWSizeChanged"
+        ResizeMode="CanResizeWithGrip"
         TextElement.FontSize="13"
         TextElement.FontWeight="Regular"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True">
     <!--  Required to make different views work  -->
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="b2v" />
@@ -49,108 +50,251 @@
 
     </Window.Resources>
     <Grid>
-        <!--  DrawerHost is the main "host" to have the hamburger  -->
-        <materialDesign:DrawerHost Grid.RowSpan="5"
+        <Grid.RowDefinitions>
+            <!--Right Navigation Menu-->
+            <RowDefinition Height="80"/>
+            <!--Content-->
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Background="{StaticResource PrimaryBrush}">
+                <Path
+                Fill="{StaticResource SecondaryBrush}"
+                Stroke="#00000000"
+                Height="50"
+                Width="50"
+                Stretch="Uniform"
+                Data="{StaticResource test}"/>
+            </Grid>
+            <Grid Grid.Column="1"
+                  Background="{StaticResource CanvasBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="43*"/>
+                    <ColumnDefinition Width="1277*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <!--Polygon header to move window-->
+                    <RowDefinition Height="Auto"/>
+                    <!--Top Navigation Menu-->
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Polygon
+                Fill="{StaticResource DimBrush}"
+                HorizontalAlignment="Left"
+                Margin="40,0,0,0"
+                Stretch="Uniform"
+                Height="10"
+                VerticalAlignment="Top"
+                MouseDown="Polygon_MouseDown" Grid.ColumnSpan="2">
+                    <!--Drawing Points-->
+                    <Polygon.Points>
+                        <!--Starting Point-->
+                        <Point X="0" Y="0"/>
+                        <!--Diagonal line-->
+                        <Point X="4" Y="4"/>
+                        <!--Final joint line-->
+                        <Point X="4" Y="0"/>
+                    </Polygon.Points>
+                </Polygon>
+
+                <!--Center-->
+                <Rectangle
+                Fill="{StaticResource DimBrush}"
+                Margin="7,0,110,0"
+                HorizontalAlignment="Stretch"
+                MouseDown="Polygon_MouseDown" Grid.Column="1"/>
+
+                <!--Right Corner-->
+                <Polygon
+                Fill="{StaticResource DimBrush}"
+                HorizontalAlignment="Right"
+                Margin="0,0,100,0"
+                Stretch="Uniform"
+                Height="10"
+                VerticalAlignment="Top"
+                MouseDown="Polygon_MouseDown" Grid.Column="1">
+                    <!--Drawing Points-->
+                    <Polygon.Points>
+                        <!--Starting Point-->
+                        <Point X="0" Y="0"/>
+                        <!--Diagonal line-->
+                        <Point X="-4" Y="4"/>
+                        <!--Final joint line-->
+                        <Point X="-4" Y="0"/>
+                    </Polygon.Points>
+                </Polygon>
+                <!--#region Rezising and Close Buttons-->
+                <StackPanel
+                Grid.RowSpan="2"
+                Panel.ZIndex="1"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,8,8,0" Grid.Column="1">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Height" Value="25"/>
+                            <Setter Property="Width" Value="25"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border
+                                        Background="{TemplateBinding Background}">
+                                            <Path
+                                            Data="{Binding Content,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"
+                                            Fill="{StaticResource SecondaryBrush}"
+                                            Height="{TemplateBinding FontSize}"
+                                            Width="{TemplateBinding FontSize}"
+                                            Stretch="Uniform"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <!--After maximizing the window, the maximize button changes to that that for normalizing-->
+                        <Style x:Key="MaximizeButtonStyle"
+                           TargetType="{x:Type Button}"
+                           BasedOn="{StaticResource {x:Type Button}}">
+                            <!--To inherit the previos style-->
+
+                            <!--Default icon at the beginning-->
+                            <Setter Property="Content" Value="{StaticResource maximize_icon}"/>
+
+                            <!--Change icon when window is maximized-->
+                            <Style.Triggers>
+                                <DataTrigger
+                                Binding="{Binding WindowState, ElementName=mainWindow}" Value="Maximized">
+                                    <Setter Property="Content" Value="{StaticResource restore_icon}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button
+                    Name="minimizeButton"
+                    Content="{StaticResource minimize_icon}"
+                    Click="minimizeButton_Click"/>
+                    <Button
+                    Name="maximizeButton"
+                    Style="{StaticResource MaximizeButtonStyle}"
+                    Click="maximizeButton_Click"/>
+                    <Button
+                    Name="closeButton"
+                    Content="{StaticResource close_icon}"
+                    Click="closeButton_Click"/>
+                </StackPanel>
+                <!--#endregion-->
+            </Grid>
+        </Grid>
+            <Grid Grid.Row="1">
+            <!--  DrawerHost is the main "host" to have the hamburger  -->
+            <materialDesign:DrawerHost 
+                Grid.RowSpan="5"
                                    Grid.ColumnSpan="5"
                                    IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-            <!--  Top Action Bar  -->
-            <Grid>
-                <materialDesign:ColorZone Height="65"
+                <!--  Top Action Bar  -->
+                <Grid>
+                    <materialDesign:ColorZone Height="65"
                                           MaxHeight="100"
                                           Padding="6"
                                           materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                           DockPanel.Dock="Top"
                                           Mode="PrimaryMid">
-                    <!--  Everything contained in top bar  -->
-                    <DockPanel>
-                        <!--  Hamburger button  -->
-                        <ToggleButton x:Name="MenuToggleButton"
+                        <!--  Everything contained in top bar  -->
+                        <DockPanel>
+                            <!--  Hamburger button  -->
+                            <ToggleButton x:Name="MenuToggleButton"
                                       Margin="20,0,0,0"
                                       IsChecked="False"
                                       Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
-                        <!--  Title  -->
-                        <TextBlock Margin="20,0,0,0"
+                            <!--  Title  -->
+                            <TextBlock Margin="20,0,0,0"
                                    VerticalAlignment="Center"
                                    FontSize="24"
                                    RenderOptions.EdgeMode="Aliased"
                                    Text="Breeze" />
-                        <!--  Top Right Overflow  -->
-                        <materialDesign:PopupBox Padding="0,0,0,0"
+                            <!--  Top Right Overflow  -->
+                            <materialDesign:PopupBox Padding="0,0,0,0"
                                                  HorizontalAlignment="Right"
                                                  DockPanel.Dock="Right"
                                                  PlacementMode="BottomAndAlignRightEdges"
                                                  StaysOpen="False">
-                            <!--  Items inside overflow  -->
-                            <StackPanel>
-                                <!--  Poster Button  -->
-                                <Button Click="PosterButton_OnClick">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="0,0,10,0"
+                                <!--  Items inside overflow  -->
+                                <StackPanel>
+                                    <!--  Poster Button  -->
+                                    <Button Click="PosterButton_OnClick">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Margin="0,0,10,0"
                                                                  VerticalAlignment="Center"
                                                                  Kind="ViewList" />
-                                        <TextBlock Text="Poster View" />
-                                    </StackPanel>
-                                </Button>
-                                <!--  Banner Button  -->
-                                <Button Click="BannerButton_OnClick">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="0,0,10,0"
+                                            <TextBlock Text="Poster View" />
+                                        </StackPanel>
+                                    </Button>
+                                    <!--  Banner Button  -->
+                                    <Button Click="BannerButton_OnClick">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Margin="0,0,10,0"
                                                                  VerticalAlignment="Center"
                                                                  Kind="ViewStream" />
-                                        <TextBlock Text="Banner View" />
-                                    </StackPanel>
-                                </Button>
-                                <!--  List Button  -->
-                                <Button Click="ListButton_OnClick">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="0,0,10,0"
+                                            <TextBlock Text="Banner View" />
+                                        </StackPanel>
+                                    </Button>
+                                    <!--  List Button  -->
+                                    <Button Click="ListButton_OnClick">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Margin="0,0,10,0"
                                                                  VerticalAlignment="Center"
                                                                  Kind="ViewHeadline" />
-                                        <TextBlock Text="List View" />
-                                    </StackPanel>
-                                </Button>
-                                <!--  Refresh Button  -->
-                                <Button x:Name="rgbtn"
+                                            <TextBlock Text="List View" />
+                                        </StackPanel>
+                                    </Button>
+                                    <!--  Refresh Button  -->
+                                    <Button x:Name="rgbtn"
                                         Click="RefreshGames_OnClick">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="0,0,10,0"
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Margin="0,0,10,0"
                                                                  VerticalAlignment="Center"
                                                                  Kind="Refresh" />
-                                        <TextBlock Text="Refresh" />
-                                    </StackPanel>
-                                </Button>
-                                <!--  Settings Button  -->
-                                <Button Click="SettingsButton_OnClick">
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="0,0,10,0"
+                                            <TextBlock Text="Refresh" />
+                                        </StackPanel>
+                                    </Button>
+                                    <!--  Settings Button  -->
+                                    <Button Click="SettingsButton_OnClick">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Margin="0,0,10,0"
                                                                  VerticalAlignment="Center"
                                                                  Kind="Settings" />
-                                        <TextBlock Text="Settings" />
-                                    </StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </materialDesign:PopupBox>
-                    </DockPanel>
-                </materialDesign:ColorZone>
-                <ContentControl Grid.Row="0"
+                                            <TextBlock Text="Settings" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </materialDesign:PopupBox>
+                        </DockPanel>
+                    </materialDesign:ColorZone>
+                    <ContentControl Grid.Row="0"
                                 Grid.Column="0"
                                 Margin="0,64,0,0"
                                 Content="{Binding}" />
-            </Grid>
-            <!--  Content for hamburger  -->
-            <materialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel MinWidth="212">
-                    <!--  Button to open hamburger  -->
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="15*" />
-                            <RowDefinition Height="85*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <ToggleButton Grid.Row="0"
+                </Grid>
+                <!--  Content for hamburger  -->
+                <materialDesign:DrawerHost.LeftDrawerContent>
+                    <DockPanel MinWidth="212">
+                        <!--  Button to open hamburger  -->
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="15*" />
+                                <RowDefinition Height="85*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <ToggleButton Grid.Row="0"
                                       Grid.Column="1"
                                       Margin="10"
                                       HorizontalAlignment="Right"
@@ -158,13 +302,13 @@
                                       IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}"
                                       Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
 
-                        <StackPanel Grid.Row="0"
+                            <StackPanel Grid.Row="0"
                                     Grid.Column="0"
                                     Margin="15,0,0,0"
                                     VerticalAlignment="Center"
                                     Orientation="Horizontal">
-                            <!--  Icons for Launchers  -->
-                            <Button x:Name="SteamLaunchBtn"
+                                <!--  Icons for Launchers  -->
+                                <Button x:Name="SteamLaunchBtn"
                                     Width="30"
                                     Height="30"
                                     Padding="0,0,0,0"
@@ -172,13 +316,13 @@
                                     Style="{StaticResource MaterialDesignFlatButton}"
                                     Tag="Steam"
                                     ToolTip="Steam">
-                                <materialDesign:PackIcon Width="20"
+                                    <materialDesign:PackIcon Width="20"
                                                          Height="20"
                                                          Margin="5,5,5,5"
                                                          VerticalAlignment="Center"
                                                          Kind="Steam" />
-                            </Button>
-                            <Button x:Name="OriginLaunchBtn"
+                                </Button>
+                                <Button x:Name="OriginLaunchBtn"
                                     Width="30"
                                     Height="30"
                                     Padding="0,0,0,0"
@@ -186,14 +330,14 @@
                                     Style="{StaticResource MaterialDesignFlatButton}"
                                     Tag="Origin"
                                     ToolTip="Origin">
-                                <materialDesign:PackIcon Width="20"
+                                    <materialDesign:PackIcon Width="20"
                                                          Height="20"
                                                          Margin="5,5,5,5"
                                                          VerticalAlignment="Center"
                                                          FontSize="20"
                                                          Kind="Origin" />
-                            </Button>
-                            <Button x:Name="UplayLaunchBtn"
+                                </Button>
+                                <Button x:Name="UplayLaunchBtn"
                                     Width="35"
                                     Height="35"
                                     Padding="0,0,0,0"
@@ -201,14 +345,14 @@
                                     Style="{StaticResource MaterialDesignFlatButton}"
                                     Tag="Uplay"
                                     ToolTip="Uplay">
-                                <materialDesign:PackIcon Width="20"
+                                    <materialDesign:PackIcon Width="20"
                                                          Height="20"
                                                          Margin="5,5,5,5"
                                                          VerticalAlignment="Center"
                                                          FontSize="20"
                                                          Kind="Uplay" />
-                            </Button>
-                            <Button x:Name="BattleNetLaunchBtn"
+                                </Button>
+                                <Button x:Name="BattleNetLaunchBtn"
                                     Width="35"
                                     Height="35"
                                     Padding="0,0,0,0"
@@ -216,14 +360,14 @@
                                     Style="{StaticResource MaterialDesignFlatButton}"
                                     Tag="Battle"
                                     ToolTip="Battle.Net">
-                                <materialDesign:PackIcon Width="20"
+                                    <materialDesign:PackIcon Width="20"
                                                          Height="20"
                                                          Margin="5,5,5,5"
                                                          VerticalAlignment="Center"
                                                          FontSize="20"
                                                          Kind="Battlenet" />
-                            </Button>
-                            <Button x:Name="EpicLaunchBtn"
+                                </Button>
+                                <Button x:Name="EpicLaunchBtn"
                                     Width="35"
                                     Height="35"
                                     Padding="0,0,0,0"
@@ -231,48 +375,48 @@
                                     Style="{StaticResource MaterialDesignFlatButton}"
                                     Tag="Epic"
                                     ToolTip="Epic Games">
-                                <materialDesign:PackIcon Width="20"
+                                    <materialDesign:PackIcon Width="20"
                                                          Height="20"
                                                          Margin="5,5,5,5"
                                                          VerticalAlignment="Center"
                                                          FontSize="20"
                                                          Kind="Shield" />
 
-                            </Button>
-                        </StackPanel>
-                        <ScrollViewer Grid.Row="2"
+                                </Button>
+                            </StackPanel>
+                            <ScrollViewer Grid.Row="2"
                                       Grid.ColumnSpan="2"
                                       VerticalScrollBarVisibility="Auto">
-                            <StackPanel Orientation="Vertical">
-                                <Button x:Name="AllGenreBtn"
+                                <StackPanel Orientation="Vertical">
+                                    <Button x:Name="AllGenreBtn"
                                         Click="ApplyGenreFilter_OnClick"
                                         Content="All Genres"
                                         Style="{StaticResource MaterialDesignFlatButton}"
                                         Tag="" />
-                                <ItemsControl x:Name="GenreSidebar"
+                                    <ItemsControl x:Name="GenreSidebar"
                                               ItemsSource="{Binding Source={StaticResource GenreListCVS}, IsAsync=True}"
                                               ScrollViewer.CanContentScroll="True">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel>
-                                                <Button Name="GenreButton"
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <Button Name="GenreButton"
                                                         Click="ApplyGenreFilter_OnClick"
                                                         Content="{Binding Name}"
                                                         Style="{StaticResource MaterialDesignFlatButton}"
                                                         Tag="{Binding Name}"
                                                         Loaded="GenresLoaded" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Grid>
-                </DockPanel>
-            </materialDesign:DrawerHost.LeftDrawerContent>
-        </materialDesign:DrawerHost>
-        <!--  FAB for adding new games  -->
-        <Button Name="AddGameButton"
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </DockPanel>
+                </materialDesign:DrawerHost.LeftDrawerContent>
+            </materialDesign:DrawerHost>
+            <!--  FAB for adding new games  -->
+            <Button Name="AddGameButton"
                 Grid.Row="5"
                 Grid.Column="5"
                 Width="60"
@@ -283,15 +427,25 @@
                 Click="OpenAddGameWindow_OnClick"
                 Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
                 ToolTip="Add a game">
-            <materialDesign:PackIcon Width="30"
+                <materialDesign:PackIcon Width="30"
                                      Height="30"
                                      VerticalAlignment="Center"
                                      Kind="Plus" />
-        </Button>
-        <Border>
-            <Frame x:Name="DialogFrame"
+            </Button>
+            <Path
+                Fill="{StaticResource MaterialDesignBody}"
+                Opacity="0.2"
+                Stroke="Transparent"
+                Margin="0,70,0,0"
+                Height="550"
+                Width="550"
+                Stretch="Uniform"
+                Data="{StaticResource test}"/>
+            <Border>
+                <Frame x:Name="DialogFrame"
                    NavigationUIVisibility="Hidden"
                    Visibility="Hidden" />
-        </Border>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
